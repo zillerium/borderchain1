@@ -21,8 +21,14 @@ contract BCMain {
         bytes32 GoodsCurrency;
     }
 
-    mapping (bytes32 => JourneyDetail) JourneyDetails;
+    mapping (bytes32 => JourneyDetail) public JourneyDetails;
     bytes32[] public journeyAccounts;
+
+// test
+
+function addCompany (bytes32 companyID) public {
+  journeyAccounts.push(companyID);
+}
 
 
 
@@ -45,6 +51,7 @@ contract BCMain {
         //    ShipperAccountHash: ShipperAccountHash, CustomsAccountHash: CustomsAccountHash,
         //    PaymentAmount: PaymentAmount, GoodsDesc: GoodsDesc, GoodsValue: GoodsValue, GoodsCurrency: GoodsCurrency});
         //     JourneyDetails.push(jd);
+
 
 JourneyDetails[companyID].PlateNumber=PlateNumber;
 JourneyDetails[companyID].ImageLicensePlateHash=ImageLicensePlateHash;
