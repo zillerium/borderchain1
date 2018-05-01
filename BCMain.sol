@@ -1,7 +1,14 @@
 pragma solidity ^0.4.18;
 
+// storing strings is very expensive so this presently has mostly bytes32 as a storage.
+// we need to use a data store such as IPFS in conjunction with the contract.
 
 contract BCMain {
+
+    struct  CompanyDetail {
+        bytes32 CompanyIDHash;
+        bytes32 CompanyName;
+    }
 
     struct  VehicleDetail {
         bytes32 PlateNumber  ;
@@ -16,11 +23,12 @@ contract BCMain {
     struct TariffDetail {
         uint Tariff;
     }
-
+// 0xa7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a
     struct PaymentDetail {
         bytes32 ShipperAccountHash;
         bytes32 CustomsAccountHash;
         uint PaymentAmount;
+        bytes32 GoodsCurrency;
     }
 
     struct GoodsDetail {
@@ -34,44 +42,75 @@ contract BCMain {
     mapping (bytes32 => PaymentDetail) public PaymentDetails;
     mapping (bytes32 => TariffDetail) public TariffDetails;
     mapping (bytes32 => GoodsDetail) public GoodsDetails;
-    bytes32[] public journeyAccounts;
+    mapping (bytes32 => CompanyDetail) public CompanyDetails;
+    bytes32[] public journeyCertificates;
 
-// test
-
-function addCompany (bytes32 companyID) public {
-  journeyAccounts.push(companyID);
+// hash of all journey data, stored on IPFS
+function addCertificate(bytes32 certificateID) public {
+  journeyCertificates.push(certificateID);
 }
 
-function addVehicleDetail (bytes32 companyID, bytes32 _PlateNumber, bytes32 _ImageLicensePlateHash) public {
-    VehicleDetails[companyID].PlateNumber=_PlateNumber;
-    VehicleDetails[companyID].ImageLicensePlateHash=_ImageLicensePlateHash;
+function addCompanyDetail (bytes32 companyID, bytes32 _CompanyName) public {
+    CompanyDetails[companyID]=_companyID;
+    CompanyDetails[companyID]=_CompanyName;
 }
 
-function addLocationDetail (bytes32 companyID, bytes32 _GPSPos, bytes32 _GPSTime) public {
-    LocationDetails[companyID].GPSPos=_GPSPos;
-    LocationDetails[companyID].GPSTime=_GPSTime;
+function addVehicleDetail (bytes32 certificateID, bytes32 _PlateNumber, bytes32 _ImageLicensePlateHash) public {
+    VehicleDetails[certificateID].PlateNumber=_PlateNumber;
+    VehicleDetails[certificateID].ImageLicensePlateHash=_ImageLicensePlateHash;
 }
 
-function addTariffDetail (bytes32 companyID, uint _Tariff) public {
-    TariffDetails[companyID].Tariff=_Tariff;
+function addLocationDetail (bytes32 certificateID, bytes32 _GPSPos, bytes32 _GPSTime) public {
+    LocationDetails[certificateID].GPSPos=_GPSPos;
+    LocationDetails[certificateID].GPSTime=_GPSTime;
 }
 
-function addPaymentDetail (bytes32 companyID, bytes32 ShipperAccountHash, bytes32 CustomsAccountHash, uint PaymentAmount) public {
-    PaymentDetails[companyID].ShipperAccountHash=ShipperAccountHash;
-    PaymentDetails[companyID].CustomsAccountHash=CustomsAccountHash;
-    PaymentDetails[companyID].PaymentAmount=PaymentAmount;
-}
-function addGoodsDetail (bytes32 companyID, bytes32 GoodsDesc, uint GoodsValue, bytes32 GoodsCurrency)  public {
-    GoodsDetails[companyID].GoodsDesc=GoodsDesc;
-    GoodsDetails[companyID].GoodsValue=GoodsValue;
-    GoodsDetails[companyID].GoodsCurrency=GoodsCurrency;
+function addTariffDetail (bytes32 certificateID, uint _Tariff) public {
+    TariffDetails[certificateID].Tariff=_Tariff;
 }
 
+function addPaymentDetail (bytes32 certificateID, bytes32 _ShipperAccountHash,
+bytes32 _CustomsAccountHash, uint _PaymentAmount, bytes32 _GoodsCurrency) public {
+    PaymentDetails[certificateID].ShipperAccountHash=_ShipperAccountHash;
+    PaymentDetails[certificateID].CustomsAccountHash=_CustomsAccountHash;
+    PaymentDetails[certificateID].PaymentAmount=_PaymentAmount;
+    PaymentDetails[certificateID].GoodsCurrency=_GoodsCurrency;
+}
+function addGoodsDetail (bytes32 certificateID, bytes32 _GoodsDesc, uint _GoodsValue, bytes32 _GoodsCurrency)  public {
+    GoodsDetails[certificateID].GoodsDesc=_GoodsDesc;
+    GoodsDetails[certificateID].GoodsValue=_GoodsValue;
+    GoodsDetails[certificateID].GoodsCurrency=_GoodsCurrency;
+}
 
+    function readVehicleDetails (bytes32 certificateID) view  public returns (bytes32, bytes32) {
+        return (VehicleDetails[certificateID].PlateNumber, VehicleDetails[certificateID].ImageLicensePlateHash);
+    }
 
+    function readPaymentDetails (bytes32 certificateID) view  public returns (bytes32, bytes32, uint, bytes32) {
+        return (PaymentDetails[certificateID].ShipperAccountHash,
+        PaymentDetails[certificateID].CustomsAccountHash,
+        PaymentDetails[certificateID].PaymentAmount,
+        PaymentDetails[certificateID].GoodsCurrency
+        );
+    }
 
-    function readJourneyDetail (bytes32 CompanyAddress) view  public returns (bytes32) {
-        return VehicleDetails[CompanyAddress].PlateNumber;
+    function readGoodsDetails (bytes32 certificateID) view  public returns (bytes32, uint, bytes32) {
+        return (GoodsDetails[certificateID].GoodsDesc,
+        GoodsDetails[certificateID].GoodsValue,
+        GoodsDetails[certificateID].GoodsCurrency);
+    }
+
+    function readLocationDetails (bytes32 certificateID) public  returns (bytes32, bytes32) {
+        return (LocationDetails[certificateID].GPSPos,
+        LocationDetails[certificateID].GPSTime);
+    }
+
+    function readCompanyDetails (bytes32 companyID) public  returns (bytes32) {
+        return (CompanyDetails[companyID].CompanyName);
+    }
+
+    function readTariffDetails (bytes32 certificateID) public  returns (uint) {
+        return (TariffDetails[certificateID].Tariff);
     }
 
     function () payable public {
