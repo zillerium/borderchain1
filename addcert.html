@@ -1,0 +1,141 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Borderchain Cross Border Management</title>
+
+
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>Borderchain Cross Border Management</h1>
+
+<h2>Vehicle Details (Confirmed)</h2>
+
+<table class="table">
+  <tr>
+<td></td>
+<td>Read</td>
+<td>Update</td>
+  </tr>
+<tr>
+  <td>Plate Number</td>
+<td>    <p id="showPlateNumber"></p></td>
+<td><p id="inPlateNumber"></p><td>
+</tr>
+
+
+<tr>
+    <td>Image Hash</td>
+<td>  <p id="showImagePlate"></p></td>
+<td><p id="inImagePlate"></p><td>
+</tr>
+</table>
+
+
+
+            <button type="button" class="btn btn-default" id="btnReadVehicle">Read Vehicle Details</button>
+
+
+
+<h2>Identity</h2>
+        <label for="certidentity" class="col-lg-2 control-label">Certid</label>
+        <input id="certidentity" type="text">
+        <p id="certhashVal"></p>
+          <button id="btnHash">Get Hash</button>
+<h2>Add Vehicle Data</h2>
+        <label for="platenumber" class="col-lg-2 control-label">PlateNumber</label>
+        <input id="platenumber" type="text">
+
+        <label for="imageplatenumber" class="col-lg-2 control-label">Image PlateNumber</label>
+        <input id="imageplatenumber" type="text">
+
+        <button id="btnAddVehicle">Update Vehicle Details</button>
+
+
+        <h2 id="Vehicle">Details</h2>
+        <p id="txnID"></p>
+
+
+<p id="inCertHash"></p>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+    if (typeof web3 !== 'undefined') {
+       web3 = new Web3(web3.currentProvider);
+   } else {
+       // set the provider you want from Web3.providers
+       web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+   }
+       // Our future code here..
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var BCContract = web3.eth.contract([{"constant":true,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"readVehicleDetails","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"},{"name":"_GPSPos","type":"bytes32"},{"name":"_GPSTime","type":"bytes32"}],"name":"addLocationDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"TariffDetails","outputs":[{"name":"Tariff","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"readLocationDetails","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"},{"name":"_Tariff","type":"uint256"}],"name":"addTariffDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"readPaymentDetails","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"bytes32"},{"name":"","type":"uint256"},{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"},{"name":"_PlateNumber","type":"bytes32"},{"name":"_ImageLicensePlateHash","type":"bytes32"}],"name":"addVehicleDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"VehicleDetails","outputs":[{"name":"PlateNumber","type":"bytes32"},{"name":"ImageLicensePlateHash","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"LocationDetails","outputs":[{"name":"GPSPos","type":"bytes32"},{"name":"GPSTime","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"GoodsDetails","outputs":[{"name":"GoodsDesc","type":"bytes32"},{"name":"GoodsValue","type":"uint256"},{"name":"GoodsCurrency","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"addCertificate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"PaymentDetails","outputs":[{"name":"ShipperAccountHash","type":"bytes32"},{"name":"CustomsAccountHash","type":"bytes32"},{"name":"PaymentAmount","type":"uint256"},{"name":"GoodsCurrency","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"companyID","type":"bytes32"}],"name":"readCompanyDetails","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"},{"name":"_ShipperAccountHash","type":"bytes32"},{"name":"_CustomsAccountHash","type":"bytes32"},{"name":"_PaymentAmount","type":"uint256"},{"name":"_GoodsCurrency","type":"bytes32"}],"name":"addPaymentDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"CompanyDetails","outputs":[{"name":"CompanyName","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"companyID","type":"bytes32"},{"name":"CompanyName","type":"bytes32"}],"name":"addCompanyDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"readTariffDetails","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"journeyCertificates","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"certificateID","type":"bytes32"},{"name":"_GoodsDesc","type":"bytes32"},{"name":"_GoodsValue","type":"uint256"},{"name":"_GoodsCurrency","type":"bytes32"}],"name":"addGoodsDetail","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"certificateID","type":"bytes32"}],"name":"readGoodsDetails","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"},{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"}]);
+        var aBCContract = BCContract.at('0x62128cce03bb08fdfa6242844a6c3fd204261a0a');
+
+$("#btnHash").click(function() {
+  var inputCert = $("#certidentity").val();
+var certhash = web3.sha3($("#certidentity").val());
+  $("#certhashVal").html('Cert Hash ' + certhash);
+});
+
+$("#btnAddVehicle").click(function() {
+var inputCert1 = $("#certidentity").val();
+      var platehash = web3.sha3($("#platenumber").val());
+      var imagehash = web3.sha3($("#imageplatenumber").val());
+      var certhash = web3.sha3($("#certidentity").val());
+      $("#inPlateNumber").html('Plate Hash ' + platehash);
+      $("#inImagePlate").html('Image Hash' + imagehash);
+      $("#inCertHash").html('Cert Hash ' + certhash);
+
+      aBCContract.addVehicleDetail(certhash,platehash,imagehash , function(error, result){
+    if(!error) {
+          $("#txnID").html('Txn ' + result)
+        console.log(result)
+      }
+    else
+        console.error(error);
+    });
+});
+
+$("#btnReadVehicle").click(function() {
+
+  var certhash2 = web3.sha3($("#certidentity").val());
+    aBCContract.readVehicleDetails(certhash2, function(error, result){
+    if(!error)
+    {
+        $("#showPlateNumber").html('Plate  ' + result[0]);
+        $("#showImagePlate").html('Image ' + result[1]);
+        console.log(result);
+    }
+    else {
+        $("#showPlateNumber").html('Plate '  );
+        $("#showImagePlate").html('Image '  );
+        console.error(error);
+      }
+    });
+
+
+});
+        console.log(aBCContract);
+
+    </script>
+
+</body>
+</html>

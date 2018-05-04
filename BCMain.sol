@@ -6,7 +6,6 @@ pragma solidity ^0.4.18;
 contract BCMain {
 
     struct  CompanyDetail {
-        bytes32 CompanyIDHash;
         bytes32 CompanyName;
     }
 
@@ -50,9 +49,8 @@ function addCertificate(bytes32 certificateID) public {
   journeyCertificates.push(certificateID);
 }
 
-function addCompanyDetail (bytes32 companyID, bytes32 _CompanyName) public {
-    CompanyDetails[companyID]=_companyID;
-    CompanyDetails[companyID]=_CompanyName;
+function addCompanyDetail (bytes32 companyID, bytes32 CompanyName) public {
+    CompanyDetails[companyID].CompanyName=CompanyName;
 }
 
 function addVehicleDetail (bytes32 certificateID, bytes32 _PlateNumber, bytes32 _ImageLicensePlateHash) public {
@@ -100,16 +98,16 @@ function addGoodsDetail (bytes32 certificateID, bytes32 _GoodsDesc, uint _GoodsV
         GoodsDetails[certificateID].GoodsCurrency);
     }
 
-    function readLocationDetails (bytes32 certificateID) public  returns (bytes32, bytes32) {
+    function readLocationDetails (bytes32 certificateID) public view returns (bytes32, bytes32) {
         return (LocationDetails[certificateID].GPSPos,
         LocationDetails[certificateID].GPSTime);
     }
 
-    function readCompanyDetails (bytes32 companyID) public  returns (bytes32) {
+    function readCompanyDetails (bytes32 companyID) public view returns (bytes32) {
         return (CompanyDetails[companyID].CompanyName);
     }
 
-    function readTariffDetails (bytes32 certificateID) public  returns (uint) {
+    function readTariffDetails (bytes32 certificateID) public view returns (uint) {
         return (TariffDetails[certificateID].Tariff);
     }
 
